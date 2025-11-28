@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Platform, KeyboardAvoidingView, ScrollView } from "react-native"
 import {
   Actionsheet, 
   ActionsheetBackdrop, 
@@ -82,40 +83,49 @@ export function CreateClassModal({ isOpen, onClose, schoolId, onSuccess }: Creat
           <ActionsheetDragIndicator />
         </ActionsheetDragIndicatorWrapper>
 
-        <VStack w="$full" p="$4" space="md">
-          <Text size="lg" bold>Nova Turma</Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "padding"}
+          style={{ width: '100%' }}
+          keyboardVerticalOffset={Platform.OS === "android" ? 0 : 0}
+        >
+          <ScrollView showsVerticalScrollIndicator={false}>
 
-          <FormControl>
-            <FormControlLabel><FormControlLabelText>Nome da Turma</FormControlLabelText></FormControlLabel>
-            <Input>
-              <InputField placeholder="Ex: 1° Ano B" value={name} onChangeText={setName} autoFocus={isOpen}/>
-            </Input>
-          </FormControl>
+            <VStack w="$full" p="$4" space="md" pb="$12">
+              <Text size="lg" bold>Nova Turma</Text>
 
-          <FormControl>
-            <FormControlLabel><FormControlLabelText>Turno</FormControlLabelText></FormControlLabel>
-            <HStack space="sm">
-              {['morning', 'afternoon', 'night'].map((t) => (
-                <Button
-                  key={t}
-                  flex={1}
-                  variant={type === t ? "solid" : "outline"}
-                  action={type === t ? "primary" : "secondary"}
-                  onPress={() => setType(t as any)}
-                  size="sm"
-                >
-                  <ButtonText>
-                    {t === 'morning' ? 'Manhã' : t === 'afternoon' ? 'Tarde' : 'Noite'}
-                  </ButtonText>
-                </Button>
-              ))}
-            </HStack>
-          </FormControl>
+              <FormControl>
+                <FormControlLabel><FormControlLabelText>Nome da Turma</FormControlLabelText></FormControlLabel>
+                <Input>
+                  <InputField placeholder="Ex: 1° Ano B" value={name} onChangeText={setName} autoFocus={isOpen}/>
+                </Input>
+              </FormControl>
 
-          <Button mt="$4" onPress={handleCreate} isDisabled={loading}>
-            <ButtonText>{loading ? "Salvando..." : "Criar Turma"}</ButtonText>
-          </Button>
-        </VStack>
+              <FormControl>
+                <FormControlLabel><FormControlLabelText>Turno</FormControlLabelText></FormControlLabel>
+                <HStack space="sm">
+                  {['morning', 'afternoon', 'night'].map((t) => (
+                    <Button
+                      key={t}
+                      flex={1}
+                      variant={type === t ? "solid" : "outline"}
+                      action={type === t ? "primary" : "secondary"}
+                      onPress={() => setType(t as any)}
+                      size="sm"
+                    >
+                      <ButtonText>
+                        {t === 'morning' ? 'Manhã' : t === 'afternoon' ? 'Tarde' : 'Noite'}
+                      </ButtonText>
+                    </Button>
+                  ))}
+                </HStack>
+              </FormControl>
+
+              <Button mt="$4" onPress={handleCreate} isDisabled={loading}>
+                <ButtonText>{loading ? "Salvando..." : "Criar Turma"}</ButtonText>
+              </Button>
+            </VStack>
+          </ScrollView>  
+        </KeyboardAvoidingView>
       </ActionsheetContent>
     </Actionsheet>
   )

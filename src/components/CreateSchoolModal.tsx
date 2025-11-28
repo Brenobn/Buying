@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Platform, KeyboardAvoidingView, ScrollView } from "react-native"
 import {
   Actionsheet, 
   ActionsheetBackdrop, 
@@ -93,32 +94,40 @@ export function CreateSchoolModal({ isOpen, onClose, onSuccess }: CreateSchoolMo
           <ActionsheetDragIndicator />
         </ActionsheetDragIndicatorWrapper>
 
-        <VStack w="$full" p="$4" space="md">
-          <HStack justifyContent="space-between" alignItems="center">
-            <Text size="lg" bold>Nova Escola</Text>
-            <Button size="xs" variant="link" onPress={onClose} p="$0">
-              <Icon as={CloseIcon} size="md" color="$coolGray500" />
-            </Button>
-          </HStack>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "padding"}
+          style={{ width: "100%" }}
+          keyboardVerticalOffset={Platform.OS === "android" ? 0 : 0}
+        >
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <VStack w="$full" p="$4" space="md" pb="$20">
+              <HStack justifyContent="space-between" alignItems="center">
+                <Text size="lg" bold>Nova Escola</Text>
+                <Button size="xs" variant="link" onPress={onClose} p="$0">
+                  <Icon as={CloseIcon} size="md" color="$coolGray500" />
+                </Button>
+              </HStack>
 
-          <FormControl>
-            <FormControlLabel><FormControlLabelText>Nome da Escola</FormControlLabelText></FormControlLabel>
-            <Input>
-              <InputField placeholder="Ex: Colégio Monteiro Lobato" value={name} onChangeText={setName} autoFocus={isOpen} />
-            </Input> 
-          </FormControl>
+              <FormControl>
+                <FormControlLabel><FormControlLabelText>Nome da Escola</FormControlLabelText></FormControlLabel>
+                <Input>
+                  <InputField placeholder="Ex: Colégio Monteiro Lobato" value={name} onChangeText={setName} autoFocus={isOpen} />
+                </Input> 
+              </FormControl>
 
-          <FormControl>
-            <FormControlLabel><FormControlLabelText>Endereço completo</FormControlLabelText></FormControlLabel>
-            <Input>
-              <InputField placeholder="Ex: Rua Dona Claudina, 450" value={address} onChangeText={setAddress}/>
-            </Input>
-          </FormControl>
+              <FormControl>
+                <FormControlLabel><FormControlLabelText>Endereço completo</FormControlLabelText></FormControlLabel>
+                <Input>
+                  <InputField placeholder="Ex: Rua Dona Claudina, 450" value={address} onChangeText={setAddress}/>
+                </Input>
+              </FormControl>
 
-          <Button mt="$4" bg="$blue600" onPress={handleCreate} isDisabled={loading}>
-            <ButtonText>{loading ? "Salvando..." : "Cadastrar Escola"}</ButtonText>
-          </Button>
-        </VStack>
+              <Button mt="$4" bg="$blue600" onPress={handleCreate} isDisabled={loading}>
+                <ButtonText>{loading ? "Salvando..." : "Cadastrar Escola"}</ButtonText>
+              </Button>
+            </VStack>
+          </ScrollView>  
+        </KeyboardAvoidingView>
       </ActionsheetContent>
     </Actionsheet>
   )
