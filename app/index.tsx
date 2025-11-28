@@ -5,6 +5,7 @@ import { api } from "../src/services/api"
 import { School } from "../src/types"
 import { SchoolCard } from "../src/components/SchoolCard"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { router } from "expo-router"
 
 export default function Home() {
   const [schools, setSchools] = useState<School[]>([])
@@ -13,7 +14,7 @@ export default function Home() {
   async function fetchSchools() {
     try {
       const response = await api.get("/schools")
-      setSchools(response.data.schools)
+      setSchools(response.data.schools) 
     } catch (error) {
       console.log("Erro ao buscar escolas:", error)
     } finally {
@@ -42,13 +43,16 @@ export default function Home() {
             Escolas Públicas
           </Heading>
 
-          <FlatList 
+          <FlatList
             data={schools}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <SchoolCard 
-                data={item}
-                onPress={() => console.log("Clicou na escola:", item.name )}
+                data={item} 
+                onPress={() => {
+                  console.log("👉 CLIQUEI NO ID:", item.id)
+                  router.push(`/school/${item.id}`)
+                }} 
               />
             )}
             contentContainerStyle={{ paddingBottom: 80 }}
@@ -61,15 +65,10 @@ export default function Home() {
           />
         </VStack>
 
-        <Fab
-          size="lg"
-          placement="bottom right"
-          bg="$blue600"
-          onPress={() => console.log("Adicionar escola")}
-        >
-          <FabIcon as={AddIcon}/>
+        <Fab size="lg" placement="bottom right" bg="$blue600" onPress={() => console.log("Adicionar escola")}>
+          <FabIcon as={AddIcon} />
         </Fab>
       </SafeAreaView>
     </Box>
-  )
+  );
 }
