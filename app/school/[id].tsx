@@ -3,9 +3,10 @@ import { useLocalSearchParams, Stack } from "expo-router"
 import { 
   Box, Text, VStack, Heading, Center, Spinner, HStack, 
   Badge, BadgeText, Fab, FabIcon, AddIcon, Icon, 
-  ClockIcon, CalendarDaysIcon 
+  ClockIcon, CalendarDaysIcon, 
+  TrashIcon
 } from "@gluestack-ui/themed"
-import { FlatList } from "react-native"
+import { FlatList, Alert, Pressable } from "react-native"
 import { api } from "../../src/services/api"
 import { School, SchoolClass } from "../../src/types"
 import { CreateClassModal } from "../../src/components/CreateClassModal"
@@ -61,6 +62,29 @@ export default function SchoolDetails() {
     )
   }
 
+  async function handleDeleteClass(classId: string) {
+    Alert.alert(
+      "Ecluir Turma",
+      "Tem certeza que deseja apagar essa turma?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Apagar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await api.delete(`/schools/${id}/classes/${classId}`)
+              setClasses(prev => prev.filter(c => c.id !== classId))
+            } catch (error) {
+              console.log("Erro ao deletar:", error)
+              Alert.alert("Erro", "Não foi possível excluir a turma.")
+            }
+          }
+        }
+      ]
+    )
+  }
+
   return (
     <Box flex={1} bg="$coolGray100">
       <Stack.Screen 
@@ -73,7 +97,6 @@ export default function SchoolDetails() {
 
       <VStack flex={1} px="$4" pt="$2" space="lg">
         
-        {/* 1. Card de Informações da Escola (Hero Section) */}
         <Box bg="$white" p="$5" borderRadius="$xl" hardShadow="2">
           <VStack space="xs">
             <Text size="xs" color="$blue600" bold textTransform="uppercase">
@@ -131,18 +154,20 @@ export default function SchoolDetails() {
                     </HStack>
                   </VStack>
 
-                  <Badge 
-                    variant="outline" 
-                    action={
-                      item.type === 'morning' ? 'warning' : 
-                      item.type === 'afternoon' ? 'success' : 'info'
-                    }
-                  >
-                    <BadgeText fontWeight="$bold">
-                      {item.type === 'morning' ? 'MANHÃ' : 
-                       item.type === 'afternoon' ? 'TARDE' : 'NOITE'}
-                    </BadgeText>
-                  </Badge>
+                  <HStack alignItems="center" space="md">
+                    <Badge 
+                      variant="outline" 
+                      action={item.type === 'morning' ? 'warning' : item.type === 'afternoon' ? 'success' : 'info'}
+                    >
+                      <BadgeText fontWeight="$bold">
+                        {item.type === 'morning' ? 'Manhã' : item.type === 'afternoon' ? 'Tarde' : 'Noite'}
+                      </BadgeText>
+                    </Badge>
+
+                      <Pressable onPress={() => handleDeleteClass(item.id)}>
+                        <Icon as={TrashIcon} color="$red400" size="md" />
+                      </Pressable>
+                  </HStack>
                 </HStack>
               </Box>
             )}

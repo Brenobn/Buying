@@ -82,6 +82,50 @@ export function makeServer({ environment = "development" } = {}) {
         return schema.create("schoolClass", attrs)
       })
 
+      this.patch("/schools/:id", (schema, request) => {
+        const newAttrs = JSON.parse(request.requestBody)
+        const id = request.params.id
+        const school = schema.find("school", id)
+        
+        if (school) {
+          school.update(newAttrs)
+          return school
+        }
+        return null
+      })
+
+      this.del("/schools/:id", (schema, request) => {
+        const id = request.params.id
+        const school = schema.find("school", id)
+
+        if (school) {
+          school.destroy()
+        }
+        return {}
+      })
+
+      this.patch("/schools/:id/classes/:classId", (schema, request) => {
+        const newAttrs = JSON.parse(request.requestBody)
+        const classId = request.params.classId
+        const schoolClass = schema.find("schoolClass", classId)
+        
+        if (schoolClass) {
+          schoolClass.update(newAttrs)
+          return schoolClass
+        }
+        return null
+      })
+
+      this.del("/schools/:id/classes/:classId", (schema, request) => {
+        const classId = request.params.classId
+        const schoolClass = schema.find("schoolClass", classId)
+
+        if (schoolClass) {
+          schoolClass.destroy()
+        }
+        return {}
+      })
+
       this.passthrough()
     },
   })
