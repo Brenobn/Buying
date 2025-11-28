@@ -95,7 +95,7 @@ export default function SchoolDetails() {
         }} 
       />
 
-      <VStack flex={1} px="$4" pt="$2" space="lg">
+      <VStack flex={1} px="$6" pt="$12" space="lg">
         
         <Box bg="$white" p="$5" borderRadius="$xl" hardShadow="2">
           <VStack space="xs">
