@@ -4,13 +4,15 @@ import { Box, Center, Spinner, Text, VStack, Heading, Fab, FabIcon, AddIcon } fr
 import { api } from "../src/services/api"
 import { School } from "../src/types"
 import { SchoolCard } from "../src/components/SchoolCard"
+import { CreateSchoolModal } from "../src/components/CreateSchoolModal"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { router } from "expo-router"
 
 export default function Home() {
   const [schools, setSchools] = useState<School[]>([])
   const [loading, setLoading] = useState(true)
-
+  const [showModal, setShowModal] = useState(false)
+ 
   async function fetchSchools() {
     try {
       const response = await api.get("/schools")
@@ -65,9 +67,15 @@ export default function Home() {
           />
         </VStack>
 
-        <Fab size="lg" placement="bottom right" bg="$blue600" onPress={() => console.log("Adicionar escola")}>
+        <Fab size="lg" placement="bottom right" bg="$blue600" onPress={() => setShowModal(true)}>
           <FabIcon as={AddIcon} />
         </Fab>
+
+        <CreateSchoolModal 
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onSuccess={() => fetchSchools()}
+        />
       </SafeAreaView>
     </Box>
   );

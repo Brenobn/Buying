@@ -45,6 +45,11 @@ export function makeServer({ environment = "development" } = {}) {
         return schema.all("school")
       })
 
+      this.post("/schools", (schema, request) => {
+        const attrs = JSON.parse(request.requestBody)
+        return schema.create("school", attrs)
+      })
+
       this.get("/schools/:id", (schema, request) => {
         const id = request.params.id
         console.log("MIRAGE: Buscando Escola ID:", id)
